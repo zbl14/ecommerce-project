@@ -7,10 +7,10 @@ import { Observable, of } from 'rxjs';
 export class FormService {
   constructor() {}
 
-  getCreditCardMonths(): Observable<number[]> {
+  getCreditCardMonths(startMonth: number): Observable<number[]> {
     let data: number[] = [];
 
-    for (let theMonth = 1; theMonth <= 12; theMonth++) {
+    for (let theMonth = startMonth; theMonth <= 12; theMonth++) {
       data.push(theMonth);
     }
 
