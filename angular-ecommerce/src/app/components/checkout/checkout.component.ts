@@ -5,10 +5,10 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { first } from 'rxjs';
 import { Country } from 'src/app/common/country';
 import { State } from 'src/app/common/state';
 import { FormService } from 'src/app/services/form.service';
+import { FormValidators } from 'src/app/validators/form-validators';
 
 @Component({
   selector: 'app-checkout',
@@ -36,10 +36,12 @@ export class CheckoutComponent implements OnInit {
         firstName: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
+          FormValidators.notOnlyWhitespace,
         ]),
         lastName: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
+          FormValidators.notOnlyWhitespace,
         ]),
         email: new FormControl('', [
           Validators.required,
