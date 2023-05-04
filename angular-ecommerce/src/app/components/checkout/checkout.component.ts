@@ -9,6 +9,7 @@ import { Country } from 'src/app/common/country';
 import { State } from 'src/app/common/state';
 import { FormService } from 'src/app/services/form.service';
 import { FormValidators } from 'src/app/validators/form-validators';
+import { CartService } from 'src/app/services/cart.service';
 
 @Component({
   selector: 'app-checkout',
@@ -27,7 +28,8 @@ export class CheckoutComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private formService: FormService
+    private formService: FormService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -124,6 +126,8 @@ export class CheckoutComponent implements OnInit {
       console.log('Retrieved countries: ' + JSON.stringify(data));
       this.countries = data;
     });
+
+    this.reviewCartDetails();
   }
 
   copyShippingAddressToBillingAddress(event: Event) {
@@ -248,6 +252,16 @@ export class CheckoutComponent implements OnInit {
       // select first item by default
       formGroup.get('state').setValue(data[0]);
     });
+  }
+
+  reviewCartDetails() {
+    this.cartService.totalQuantity.subscribe(
+      (totalQuantity) => (this.totalQuantity = totalQuantity)
+    );
+
+    this.cartService.totalPrice.subscribe(
+      (totalPrice) => (this.totalPrice = totalPrice)
+    );
   }
 
   onSubmit() {
