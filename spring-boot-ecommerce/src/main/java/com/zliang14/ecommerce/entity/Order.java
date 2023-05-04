@@ -45,7 +45,7 @@ public class Order {
   @Column(name = "status")
   private String status;
 
-  @Column(name = "data_created")
+  @Column(name = "date_created")
   @CreationTimestamp
   private Date dateCreated;
 
