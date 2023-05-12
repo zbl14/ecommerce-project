@@ -8,7 +8,7 @@ import { Inject, Injectable } from '@angular/core';
 import { OKTA_AUTH } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { Observable, from, lastValueFrom } from 'rxjs';
-import { enviroment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +28,7 @@ export class AuthInterceptorService implements HttpInterceptor {
     next: HttpHandler
   ): Promise<HttpEvent<any>> {
     // only add an access token for secured endpoints
-    const theEndpoint = enviroment.happyShopApiUrl + '/orders';
+    const theEndpoint = environment.happyShopApiUrl + '/orders';
     const securedEndpoints = [theEndpoint];
 
     if (securedEndpoints.some((url) => request.urlWithParams.includes(url))) {

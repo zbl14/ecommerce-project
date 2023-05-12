@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OrderHistory } from '../common/order-history';
-import { enviroment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderHistoryService {
-  private orderUrl = enviroment.happyShopApiUrl + '/orders';
+  private orderUrl = environment.happyShopApiUrl + '/orders';
 
   constructor(private httpClient: HttpClient) {}
 
