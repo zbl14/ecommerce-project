@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
 import { Order } from 'src/app/common/order';
 import { OrderItem } from 'src/app/common/order-item';
 import { Purchase } from 'src/app/common/purchase';
+import { environment } from 'src/environments/environment';
+import { PaymentInfo } from 'src/app/common/payment-info';
 
 @Component({
   selector: 'app-checkout',
@@ -32,6 +34,11 @@ export class CheckoutComponent implements OnInit {
   billingAddressStates: State[] = [];
 
   storage: Storage = sessionStorage;
+
+  strip = Stripe(environment.stripePublishableKey);
+  paymentInfo: PaymentInfo = new PaymentInfo();
+  cardElement: any;
+  displayError: any = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -101,6 +108,7 @@ export class CheckoutComponent implements OnInit {
         ]),
       }),
       creditCard: this.formBuilder.group({
+        /*
         cardType: new FormControl('', [Validators.required]),
         nameOnCard: new FormControl('', [
           Validators.required,
@@ -117,9 +125,11 @@ export class CheckoutComponent implements OnInit {
         ]),
         expirationMonth: [''],
         expirationYear: [''],
+        */
       }),
     });
 
+    /*
     // populate the credit card months & years
     // javascript new Data().getMonth() is 0-based
     const startMonth: number = new Date().getMonth() + 1;
@@ -132,6 +142,7 @@ export class CheckoutComponent implements OnInit {
       console.log('Retrieved credit card years: ' + JSON.stringify(data));
       this.creditCardYears = data;
     });
+    */
 
     // populate countries
     this.formService.getCountries().subscribe((data) => {
@@ -140,6 +151,8 @@ export class CheckoutComponent implements OnInit {
     });
 
     this.reviewCartDetails();
+
+    this.setupStripePaymentForm();
   }
 
   copyShippingAddressToBillingAddress(event: Event) {
@@ -287,6 +300,10 @@ export class CheckoutComponent implements OnInit {
 
     // navigate back to the products page
     this.router.navigateByUrl('/products');
+  }
+
+  setupStripePaymentForm() {
+    throw new Error('Method not implemented.');
   }
 
   onSubmit() {
