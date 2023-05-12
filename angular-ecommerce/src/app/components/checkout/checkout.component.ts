@@ -298,6 +298,7 @@ export class CheckoutComponent implements OnInit {
     // reset the form
     this.checkoutFormGroup.reset();
 
+    sessionStorage.clear();
     // navigate back to the products page
     this.router.navigateByUrl('/products');
   }
