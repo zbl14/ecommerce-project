@@ -1,5 +1,7 @@
 package com.zliang14.ecommerce.controller;
 
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ import com.zliang14.ecommerce.service.CheckoutService;
 @RequestMapping("/api/checkout")
 public class CheckoutController {
 
+  private Logger logger = Logger.getLogger(getClass().getName());
+
   private CheckoutService checkoutService;
 
   @Autowired
@@ -36,6 +40,8 @@ public class CheckoutController {
 
   @PostMapping("/payment-intent")
   public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentInfo paymentInfo) throws StripeException {
+    logger.info("paymentInfo.amount: " + paymentInfo.getAmount());
+
     PaymentIntent paymentIntent = checkoutService.createPaymentIntent(paymentInfo);
 
     String paymentStr = paymentIntent.toJson();

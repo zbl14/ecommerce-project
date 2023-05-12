@@ -384,7 +384,7 @@ export class CheckoutComponent implements OnInit {
     purchase.orderItems = orderItems;
 
     // computer payment info
-    this.paymentInfo.amount = this.totalPrice * 100;
+    this.paymentInfo.amount = Math.round(this.totalPrice * 100);
     this.paymentInfo.currency = 'USD';
 
     /*
@@ -404,6 +404,7 @@ export class CheckoutComponent implements OnInit {
     });
     */
 
+    console.log(`this.paymentInfo.amount: ${this.paymentInfo.amount}`);
     // if valid form then
     // - create payment intent
     // - confirm card payment
