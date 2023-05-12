@@ -35,7 +35,7 @@ export class CheckoutComponent implements OnInit {
 
   storage: Storage = sessionStorage;
 
-  strip = Stripe(environment.stripePublishableKey);
+  stripe = Stripe(environment.stripePublishableKey);
   paymentInfo: PaymentInfo = new PaymentInfo();
   cardElement: any;
   displayError: any = '';
@@ -303,7 +303,11 @@ export class CheckoutComponent implements OnInit {
   }
 
   setupStripePaymentForm() {
-    throw new Error('Method not implemented.');
+    // get a handle to stripe elements
+    var elements = this.strip;
+    // create a card element
+    // add an instance of card UI component into the 'card-element' div
+    // add event binding for the 'change' event on the card element
   }
 
   onSubmit() {
