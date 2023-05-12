@@ -304,10 +304,25 @@ export class CheckoutComponent implements OnInit {
 
   setupStripePaymentForm() {
     // get a handle to stripe elements
-    var elements = this.strip;
-    // create a card element
+    var elements = this.stripe.elements();
+
+    // create a card element, and hide the zip-code field
+    this.cardElement = elements.create('card', { hidePostalCode: true });
+
     // add an instance of card UI component into the 'card-element' div
+    this.cardElement.mount('#card-element');
+
     // add event binding for the 'change' event on the card element
+    this.cardElement.on('change', (event: any) => {
+      // get a handle to card-errors element
+      this.displayError = document.getElementById('card-errors');
+
+      if (event.complete) {
+        this.displayError.textContent = '';
+      } else if (event.error) {
+        this.displayError.textContent = event.error.messages;
+      }
+    });
   }
 
   onSubmit() {
@@ -368,6 +383,11 @@ export class CheckoutComponent implements OnInit {
     purchase.order = order;
     purchase.orderItems = orderItems;
 
+    // computer payment info
+    this.paymentInfo.amount = this.totalPrice * 100;
+    this.paymentInfo.currency = 'USD';
+
+    /*
     // call REAT API via the CheckoutService
     this.checkoutService.placeOrder(purchase).subscribe({
       next: (response) => {
@@ -382,5 +402,53 @@ export class CheckoutComponent implements OnInit {
         alert(`There was an error: ${err.messages}`);
       },
     });
+    */
+
+    // if valid form then
+    // - create payment intent
+    // - confirm card payment
+    // - place order
+
+    if (
+      !this.checkoutFormGroup.invalid &&
+      this.displayError.textContent === ''
+    ) {
+      this.checkoutService
+        .createPaymentIntent(this.paymentInfo)
+        .subscribe((paymentIntentResponse) => {
+          this.stripe
+            .confirmCardPayment(
+              paymentIntentResponse.client_secret,
+              {
+                payment_method: {
+                  card: this.cardElement,
+                },
+              },
+              { handleActions: false }
+            )
+            .then((result: any) => {
+              if (result.error) {
+                alert(`There was an error: ${result.error.messages}`);
+              } else {
+                // call REST API via the CheckoutService
+                this.checkoutService.placeOrder(purchase).subscribe({
+                  next: (responses: any) => {
+                    alert(
+                      `Your order has been recieved.\nOrder tracking number: ${responses.orderTrackingNumber}`
+                    );
+
+                    this.resetCart();
+                  },
+                  error: (err: any) => {
+                    alert(`There was an error: ${err.messages}`);
+                  },
+                });
+              }
+            });
+        });
+    } else {
+      this.checkoutFormGroup.markAllAsTouched();
+      return;
+    }
   }
 }
