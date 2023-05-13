@@ -40,6 +40,8 @@ export class CheckoutComponent implements OnInit {
   cardElement: any;
   displayError: any = '';
 
+  isDisable: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private formService: FormService,
@@ -415,6 +417,8 @@ export class CheckoutComponent implements OnInit {
       !this.checkoutFormGroup.invalid &&
       this.displayError.textContent === ''
     ) {
+      this.isDisable = true;
+
       this.checkoutService
         .createPaymentIntent(this.paymentInfo)
         .subscribe((paymentIntentResponse) => {
@@ -442,6 +446,7 @@ export class CheckoutComponent implements OnInit {
             .then((result: any) => {
               if (result.error) {
                 alert(`There was an error: ${result.error.messages}`);
+                this.isDisable = false;
               } else {
                 // call REST API via the CheckoutService
                 this.checkoutService.placeOrder(purchase).subscribe({
@@ -451,6 +456,7 @@ export class CheckoutComponent implements OnInit {
                     );
 
                     this.resetCart();
+                    this.isDisable = false;
                   },
                   error: (err: any) => {
                     alert(`There was an error: ${err.messages}`);
